@@ -1,0 +1,117 @@
+#include <iostream>
+#include <string>
+#include <vector>
+#include <algorithm>
+using namespace std;
+
+int main() {
+    string s = "";
+    cout << "Enter your password: ";
+    getline(cin, s);
+
+    int n;
+    cout << "1. Caesar Cipher\n"
+         << "2. Modified Caesar Cipher\n"
+         << "3. Mono-alphabetic Cipher\n";
+    cin >> n;
+
+    string result = "";
+    char temp;
+    string decrypt = "";
+
+    vector<char> qwerty = {
+        'q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p',
+        'a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l',
+        'z', 'x', 'c', 'v', 'b', 'n', 'm'
+    };
+
+    switch (n) {
+        case 1:
+            // Caesar Cipher with shift of 3
+            for (int i = 0; i < s.length(); i++) {
+                if (s[i] == ' ') {
+                    result += ' ';
+                } else if (isupper(s[i])) {
+                    result += char((int(s[i] + 3 - 65) % 26) + 65);
+                } else {
+                    result += char((int(s[i] + 3 - 97) % 26) + 97);
+                }
+            }
+            cout << "Encrypted password: " << result;
+            break;
+
+        case 2:
+            // Modified Caesar Cipher with shift of 5
+            for (int i = 0; i < s.length(); i++) {
+                if (s[i] == ' ') {
+                    result += ' ';
+                } else if (isupper(s[i])) {
+                    result += char((int(s[i] + 5 - 65) % 26) + 65);
+                } else {
+                    result += char((int(s[i] + 5 - 97) % 26) + 97);
+                }
+            }
+            cout << "Encrypted password: " << result;
+            break;
+
+        case 3:
+            // Mono-alphabetic Cipher using qwerty mapping
+            for (char c : s) {
+                if (c == ' ') {
+                    result += ' ';
+                } else if (isupper(c)) {
+                    temp = tolower(c);
+                    result += toupper(qwerty[int(temp % 97)]);
+                } else {
+                    result += qwerty[int(c % 97)];
+                }
+            }
+
+            // Decryption
+            for (char c : result) {
+                if (c == ' ') {
+                    decrypt += ' ';
+                } else if (isupper(c)) {
+                    temp = tolower(c);
+                    auto it = find(qwerty.begin(), qwerty.end(), temp);
+                    int index = distance(qwerty.begin(), it);
+                    decrypt += toupper(char(index + 97));
+                } else {
+                    auto it = find(qwerty.begin(), qwerty.end(), c);
+                    int index = distance(qwerty.begin(), it);
+                    decrypt += char(index + 97);
+                }
+            }
+
+            cout << "Encrypted password: " << result << endl;
+            cout << "Decrypted password: " << decrypt;
+            break;
+
+        default:
+            cout << "Invalid option selected.";
+            break;
+    }
+
+    return 0;
+}
+
+Output:
+Enter your password: helloworld
+1.Caesar Cipher
+2.Moified Caesar Cipher
+3.Mono-alphabetic cipher
+1
+Encrypted password: khoorzruog
+Enter your password: helloworld
+1.Caesar Cipher
+2.Moified Caesar Cipher
+3.Mono-alphabetic cipher
+2
+Encrypted password: mjqqtbtwqi
+Enter your password: helloworld
+1.Caesar Cipher
+2.Moified Caesar Cipher
+3.Mono-alphabetic cipher
+3
+Encrypted password: itssgvgksr
+Decrypted password: helloworld
