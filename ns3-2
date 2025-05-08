@@ -1,0 +1,72 @@
+#include <iostream>
+#include <string>
+#include <vector>
+#include <algorithm>
+using namespace std;
+
+string caesarCipher(string s, int shift) {
+    string result = "";
+    for (char c : s) {
+        if (isalpha(c)) {
+            char base = isupper(c) ? 'A' : 'a';
+            result += char((c - base + shift) % 26 + base);
+        } else result += c;
+    }
+    return result;
+}
+
+string monoAlphabeticEncrypt(string s, const vector<char>& key) {
+    string result = "";
+    for (char c : s) {
+        if (isalpha(c)) {
+            char low = tolower(c);
+            char enc = key[low - 'a'];
+            result += isupper(c) ? toupper(enc) : enc;
+        } else result += c;
+    }
+    return result;
+}
+
+string monoAlphabeticDecrypt(string s, const vector<char>& key) {
+    string result = "";
+    for (char c : s) {
+        if (isalpha(c)) {
+            char low = tolower(c);
+            auto it = find(key.begin(), key.end(), low);
+            int index = distance(key.begin(), it);
+            result += isupper(c) ? toupper('a' + index) : 'a' + index;
+        } else result += c;
+    }
+    return result;
+}
+
+int main() {
+    string s;
+    cout << "Enter your password: ";
+    getline(cin, s);
+
+    cout << "1. Caesar Cipher\n2. Modified Caesar Cipher\n3. Mono-alphabetic Cipher\n";
+    int choice;
+    cin >> choice;
+
+    vector<char> qwerty = {
+        'q','w','e','r','t','y','u','i','o','p',
+        'a','s','d','f','g','h','j','k','l',
+        'z','x','c','v','b','n','m'
+    };
+
+    if (choice == 1) {
+        cout << "Encrypted: " << caesarCipher(s, 3) << endl;
+    } else if (choice == 2) {
+        cout << "Encrypted: " << caesarCipher(s, 5) << endl;
+    } else if (choice == 3) {
+        string enc = monoAlphabeticEncrypt(s, qwerty);
+        string dec = monoAlphabeticDecrypt(enc, qwerty);
+        cout << "Encrypted: " << enc << endl;
+        cout << "Decrypted: " << dec << endl;
+    } else {
+        cout << "Invalid choice.\n";
+    }
+
+    return 0;
+}
